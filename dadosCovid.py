@@ -1,5 +1,6 @@
 import os
 import wget
+import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,19 +40,43 @@ for i in range(len(meses)):
     dado = f'{mes} {ano}'
     if dado == meses[i]:
       quantCasos += casosDia[j]
-  
   casosMes.append(quantCasos)
   quantCasos = 0
+
+obitosMes = []
+quantObitos = 0
+
+for i in range(len(meses)):
+  for j in range(len(data)):
+    [dia, mes, ano] = data[j].split('/')
+    dado = f'{mes} {ano}'
+    if dado == meses[i]:
+      quantObitos += obitosDia[j]
+  if math.isnan(quantObitos):
+    quantObitos = 0
+  obitosMes.append(quantObitos)
+  quantObitos = 0
 
 # print(meses)
 # print(casosMes)
 # print(len(meses))
 # print(len(casosMes))
+# print(obitosMes)
 
+plt.figure(figsize=(14, 6))
 plt.bar(meses, casosMes, ec = "k", alpha = .6, color = "royalblue")
 plt.xticks(np.arange(0, len(meses), 2))
-plt.title('Casos novos por mês no Estado de São Paulo')
+plt.title('Casos novos por mês')
 plt.xlabel('Mês')
 plt.ylabel('Quantidade de casos')
+plt.savefig('CasosMes.png', format='png', dpi=300)
+plt.show()
 
+plt.figure(figsize=(14, 6))
+plt.bar(meses, obitosMes, ec = "k", alpha = .6, color = "royalblue")
+plt.xticks(np.arange(0, len(meses), 2))
+plt.title('Óbitos por mês')
+plt.xlabel('Mês')
+plt.ylabel('Quantidade de óbitos')
+plt.savefig('ObitosMes.png', format='png', dpi=300)
 plt.show()
