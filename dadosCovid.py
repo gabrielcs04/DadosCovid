@@ -75,7 +75,7 @@ plt.ylabel('Quantidade de casos')
 plt.tight_layout()
 adicionaLegendaNasBarras(fig1)
 plt.savefig('CasosMes.png', format='png', dpi=300)
-plt.show()
+# plt.show()
 
 plt.figure(figsize=(16, 7))
 fig2 = plt.bar(meses, obitosMes, ec="k", alpha=.6, color="royalblue")
@@ -86,4 +86,12 @@ plt.ylabel('Quantidade de óbitos')
 plt.tight_layout()
 adicionaLegendaNasBarras(fig2)
 plt.savefig('ObitosMes.png', format='png', dpi=300)
-plt.show()
+# plt.show()
+
+pdf = FPDF('P', 'mm', 'A4')
+pdf.add_page()
+pdf.set_font('helvetica', '', 16)
+
+pdf.cell(80,10, "Teste")
+
+pdf.output('DadosCovid.pdf')
