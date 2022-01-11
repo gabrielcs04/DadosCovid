@@ -3,8 +3,6 @@ import os
 import wget
 import math
 import pandas as pd
-import calendar
-import numpy as np
 import matplotlib.pyplot as plt
 from fpdf import FPDF
 
@@ -21,26 +19,51 @@ def converteMes(mes):
     meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
     return meses[int(mes)-1]
 
-# Estiliza o gráfico colocando o titulo, as legendas, os valores do eixo X e o tipo do layout
-def formataGrafico(titulo, legendaX, legendaY, eixoX):
-  plt.title(titulo)
-  plt.xlabel(legendaX)
-  plt.ylabel(legendaY)
-  plt.xticks(np.arange(0, len(eixoX), 2))
+# Retorna os meses relacionados aos maiores dados passados
+def mesesMaioresDados(maioresDados, dadosMes, meses):
+  mesesDosDados = []
+  for i in range(len(maioresDados)):
+    for j in range(len(dadosMes)):
+      if maioresDados[i] == dadosMes[j]:
+        mesesDosDados.append(meses[j])
+  return mesesDosDados
+
+# Estiliza os gráficos que possuem barras horizontais
+def formataGraficoHoriz(titulo, legendaX, legendaY):
+  plt.title(titulo, fontsize=22)
+  plt.xlabel(legendaX, fontsize=16)
+  plt.ylabel(legendaY, fontsize=16)
+  plt.gca().invert_yaxis()
+  plt.xticks(fontsize=14)
+  plt.yticks(fontsize=14)
+  plt.tight_layout()
+
+# Estiliza os gráficos que possuem barras verticais
+def formataGraficoVerti(titulo, legendaX, legendaY, eixoX):
+  plt.title(titulo, fontsize=44)
+  plt.xlabel(legendaX, fontsize=32)
+  plt.ylabel(legendaY, fontsize=32)
+  plt.xticks(fontsize=28)
+  plt.yticks(fontsize=28)
   plt.tight_layout()
 
 # Formata casas decimais de um número
 def formataNum(num, sep='.'):
   return num if len(num) <= 3 else formataNum(num[:-3], sep) + sep + num[-3:]
 
-# Adiciona legenda nas barras dos gráficos
-def adicionaLegendaNasBarras(grafico):
+# Adiciona legenda nas barras horizontais dos gráficos 
+def adicionaLegendaNasBarrasHoriz(grafico, soma):
   for reta in grafico:
     altura = reta.get_height()
     largura = reta.get_width()
-    plt.text(reta.get_x() + largura/2, altura, formataNum(str(int(altura))), ha='center', va='bottom')
+    plt.text(largura+soma, reta.get_y()+0.6, formataNum(str(int(largura))), fontsize=12)
 
-
+# Adiciona legenda nas barras verticais dos gráficos 
+def adicionaLegendaNasBarrasVerti(grafico):
+  for reta in grafico:
+    altura = reta.get_height()
+    largura = reta.get_width()
+    plt.text(reta.get_x()+largura/2, altura, formataNum(str(int(altura))), ha='center', va='bottom', fontsize=24)
 
 # Link e nome do arquivo CSV utilizado
 linkArq = 'https://www.seade.gov.br/wp-content/uploads/coronavirus-files/Dados-covid-19-estado.csv'
@@ -104,38 +127,72 @@ for i in range(len(meses)):
   obitosMes.append(quantObitos)
   quantObitos = 0
 
+maioresCasos = sorted(casosMes)[-5:]
+mesesMaisCasos = mesesMaioresDados(maioresCasos, casosMes, meses)
+
+maioresObitos = sorted(obitosMes)[-5:]
+mesesMaisObitos = mesesMaioresDados(maioresObitos, obitosMes, meses)
+
+
 # Tamanho dos gráficos
 largura = 17
-altura = 8
+altura = 11
 
 # Cria o gráfico dos casos
 plt.figure(figsize=(largura, altura))
-graf1 = plt.bar(meses, casosMes, ec="k", alpha=.6, color="royalblue")
-formataGrafico('Casos novos por mês', 'Data', 'Quantidade de casos', meses)
-adicionaLegendaNasBarras(graf1)
+graf1 = plt.barh(meses, casosMes, ec="k", alpha=.6, color="royalblue")
+formataGraficoHoriz('Casos novos por mês', 'Quantidade de casos', 'Data')
+adicionaLegendaNasBarrasHoriz(graf1, 1000)
 plt.savefig('./graficos/casosMes.png', format='png', dpi=300)
-# plt.show()
 
 # Cria o gráfico dos óbitos
 plt.figure(figsize=(largura, altura))
-graf2 = plt.bar(meses, obitosMes, ec="k", alpha=.6, color="royalblue")
-formataGrafico('Óbitos por mês', 'Data', 'Quantidade de óbitos', meses)
-adicionaLegendaNasBarras(graf2)
+graf2 = plt.barh(meses, obitosMes, ec="k", alpha=.6, color="royalblue")
+formataGraficoHoriz('Óbitos por mês', 'Quantidade de óbitos', 'Data')
+adicionaLegendaNasBarrasHoriz(graf2, 60)
 plt.savefig('./graficos/obitosMes.png', format='png', dpi=300)
-# plt.show()
+
+# Cria o gráfico dos meses com mais casos
+plt.figure(figsize=(largura, altura))
+graf3 = plt.bar(mesesMaisCasos, maioresCasos, width=0.5, ec="k", alpha=.6, color="royalblue")
+formataGraficoVerti('Meses com mais casos', 'Data', 'Quantidade de casos', mesesMaisCasos)
+adicionaLegendaNasBarrasVerti(graf3)
+plt.savefig('./graficos/mesesComMaisCasos.png', format='png', dpi=300)
+
+plt.figure(figsize=(largura, altura))
+graf4 = plt.bar(mesesMaisObitos, maioresObitos, width=0.5, ec="k", alpha=.6, color="royalblue")
+formataGraficoVerti('Meses com mais óbitos', 'Data', 'Quantidade de óbitos', mesesMaisObitos)
+adicionaLegendaNasBarrasVerti(graf4)
+plt.savefig('./graficos/mesesComMaisObitos.png', format='png', dpi=300)
 
 # Tamanho do PDF
 largura = 210
 altura = 297
 
-# Cria o PDF com as devidas formatações
+# Cria o PDF
 pdf = FPDF('P', 'mm', 'A4')
-pdf.add_page()
-pdf.set_font('helvetica', '', 16)
 
-# Insere as informações no PDF
+# Insere o cabeçalho e os gráficos dos óbitos e casos mensais
+pdf.add_page()
 pdf.image('./imagens/cabecalho.png', 0, 0, largura)
-pdf.image('./graficos/casosMes.png', 0, 80, w=largura)
+pdf.image('./graficos/casosMes.png', 5, 33, largura-10)
+pdf.image('./graficos/obitosMes.png', 5, 163, largura-10)
+
+# Insere os gráficos dos meses com mais casos e óbitos
+pdf.add_page()
+pdf.image('./graficos/mesesComMaisCasos.png', 5, 10, (largura/2)-10)
+pdf.image('./graficos/mesesComMaisObitos.png', (largura/2)+5, 10, (largura/2)-10)
+
+pdf.set_font('helvetica', 'B', 16)
+
+# Insere uma linha em branco para dar espaço dos gráficos acima
+pdf.cell(0, 65, '', ln=1)
+
+# Insere a frase do problema observado
+pdf.cell(0, 15, 'Problema observado:', ln=1)
+pdf.set_font('helvetica', '', 12)
+analise = 'Analise'
+pdf.multi_cell(0, 8, analise, align='L')
 
 # Salva o PDF finalizado
 pdf.output('relatório.pdf')
