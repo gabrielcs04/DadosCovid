@@ -172,27 +172,53 @@ altura = 297
 # Cria o PDF
 pdf = FPDF('P', 'mm', 'A4')
 
-# Insere o cabeçalho e os gráficos dos óbitos e casos mensais
+# Cria a capa do relatório
 pdf.add_page()
-pdf.image('./imagens/cabecalho.png', 0, 0, largura)
+pdf.image('./imagens/fundoPrincipal.png', 0, 0, largura)
+
+pdf.set_font('helvetica', 'B', 54)
+pdf.set_text_color(255, 255, 255)
+pdf.cell(0, 50, '', ln=1)
+pdf.multi_cell(0, 25, 'Covid-19\nno Estado de\nSão Paulo', align='C', ln=1)
+
+pdf.set_font('helvetica', 'B', 20)
+pdf.set_text_color(0, 0, 0)
+pdf.cell(0, 125, '', ln=1)
+pdf.multi_cell(0, 8, 'Criado por:\nGabriel Costa da Silva', align='C', ln=1)
+
+# Insere o titulo da segunda página
+pdf.add_page()
+pdf.image('./imagens/fundoSecundario.png', 0, 0, largura)
+pdf.set_font('helvetica', 'B', 32)
+pdf.set_text_color(255, 255, 255)
+pdf.cell(0, 15, 'DADOS GERAIS', ln=1)
+
+# Insere os gráficos dos óbitos e casos mensais
 pdf.image('./graficos/casosMes.png', 5, 33, largura-10)
 pdf.image('./graficos/obitosMes.png', 5, 163, largura-10)
 
-# Insere os gráficos dos meses com mais casos e óbitos
+# Insere o titulo da terceira página
 pdf.add_page()
-pdf.image('./graficos/mesesComMaisCasos.png', 5, 10, (largura/2)-10)
-pdf.image('./graficos/mesesComMaisObitos.png', (largura/2)+5, 10, (largura/2)-10)
+pdf.image('./imagens/fundoSecundario.png', 0, 0, largura)
+pdf.set_font('helvetica', 'B', 32)
+pdf.set_text_color(255, 255, 255)
+pdf.cell(0, 15, 'DADOS ESPECÍFICOS', ln=1)
+
+# Insere os gráficos dos meses com mais casos e óbitos
+pdf.image('./graficos/mesesComMaisCasos.png', 5, 33, (largura/2)-10)
+pdf.image('./graficos/mesesComMaisObitos.png', (largura/2)+5, 33, (largura/2)-10)
 
 pdf.set_font('helvetica', 'B', 16)
+pdf.set_text_color(0, 0, 0)
 
 # Insere uma linha em branco para dar espaço dos gráficos acima
-pdf.cell(0, 65, '', ln=1)
+pdf.cell(0, 73, '', ln=1)
 
 # Insere a frase do problema observado
 pdf.cell(0, 15, 'Problema observado:', ln=1)
 pdf.set_font('helvetica', '', 12)
-analise = 'Analise'
+analise = 'O surgimento de variantes é um grande contratempo para superar a pandemia, visto que os meses que registraram mais casos e mortes foram os quais houve o surgimento de uma determinada variante do vírus da Covid-19.'
 pdf.multi_cell(0, 8, analise, align='L')
 
 # Salva o PDF finalizado
-pdf.output('relatório.pdf')
+pdf.output('Covid-19 no Estado de SP.pdf')
