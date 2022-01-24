@@ -182,7 +182,7 @@ pdf.cell(0, 50, '', ln=1)
 pdf.multi_cell(0, 25, 'Covid-19\nno Estado de\nSão Paulo', align='C', ln=1)
 
 pdf.set_font('helvetica', 'B', 20)
-pdf.set_text_color(0, 0, 0)
+pdf.set_text_color(173, 80, 171)
 pdf.cell(0, 125, '', ln=1)
 pdf.multi_cell(0, 8, 'Criado por:\nGabriel Costa da Silva', align='C', ln=1)
 
