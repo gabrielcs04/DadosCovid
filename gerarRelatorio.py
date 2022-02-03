@@ -217,7 +217,7 @@ pdf.cell(0, 73, '', ln=1)
 # Insere a frase do problema observado
 pdf.cell(0, 15, 'Problema observado:', ln=1)
 pdf.set_font('helvetica', '', 12)
-analise = 'O surgimento de variantes é um grande contratempo para superar a pandemia, visto que os meses que registraram mais casos e mortes foram os quais houve o surgimento de uma determinada variante do vírus da Covid-19.'
+analise = 'A pandemia causou diversas consequências no planeta, impactando a vida e interação social, profissional e pessoal de todos. E durante esse período uma questão que se falou tanto foi sobre saúde mental, números que mesmo antes da pandemia já eram alarmantes e agora afetam mais pessoas.\n\nSegundo a Organização Mundial de Saúde (OMS), 18,6 milhões de brasileiros possuem ansiedade e os transtornos mentais afetam mais de um terço do número de pessoas impactadas nas Américas.\n\nO aumento de transtornos mentais durante a pandemia pode ocorrer por vários cenários, podendo destacar, o estresse gerado pela a mudança drástica de rotina devido as medidas de distanciamento social ou pelas consequências financeira e as experiências traumáticas relacionadas à infecção ou à morte de pessoas próximas.\n\nE esses cenários não são independentes, onde uma pessoas pode ser exposta á várias destas situações ao mesmo tempo elevando mais ainda os riscos de desenvolver ou agravar os transtornos mentais.'
 pdf.multi_cell(0, 8, analise, align='L')
 
 # Salva o PDF finalizado
